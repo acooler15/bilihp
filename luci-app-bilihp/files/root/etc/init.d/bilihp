@@ -1,0 +1,113 @@
+#!/bin/sh /etc/rc.common
+USE_PROCD=1
+
+START=99
+STOP=21
+
+APP_NAME='bilihp_router'
+CONF_NAME="conf.ini"
+SCRIPT_NAME="bilihp_log_limit"
+LOG_NAME="bilihp.log"
+
+DIR_PATH='/tmp/bilihp/'
+APP_PATH="$DIR_PATH""$APP_NAME"
+CONF_PATH="$DIR_PATH""$CONF_NAME"
+SCRIPT_PATH="$DIR_PATH""$SCRIPT_NAME"
+LOG_PATH="$DIR_PATH""$LOG_NAME"
+
+
+start_service() {
+	config_load 'bilihp'
+	local enable=0
+
+	config_get_bool enable conf enable
+	[ "$enable" != 1 ] && return 0
+	
+	local name
+	local password
+	config_get name conf name
+	config_get password conf password
+
+	[ -d $DIR_PATH ] || mkdir $DIR_PATH
+
+	touch $APP_PATH
+	download_bilihp $APP_PATH
+	local filesize
+	filesize=`ls -l $APP_PATH | awk '{ print $5 }'`
+	[ $filesize -le 0 ] && logger -s -t bilihp "donwload bilihp error!"
+	[ $filesize -le 0 ] && return 0
+	chmod +x $APP_PATH
+
+	echo -e "[c2c]\nname = $name\npassword = $password" > "$CONF_PATH"
+
+	local log=0
+	config_get_bool log conf log
+
+	local logsize
+	config_get logsize conf logsize
+	if [ "$log" == 1 ]; then
+		[ "$logsize" -gt 0 ] || logsize=64
+		uci set bilihp.conf.logsize="$logsize"
+		generate_limit_log $(($logsize*1024))
+		chmod +x "$SCRIPT_PATH"
+		cd "$DIR_PATH" && "$APP_PATH" >> "$LOG_PATH" 2>&1 &
+		"$SCRIPT_PATH" > /dev/null 2>&1 &
+	else
+		echo "Logging is not enabled!" > "$LOG_PATH"
+		cd "$DIR_PATH" && "$APP_PATH" > /dev/null 2>&1 &
+	fi
+
+	sleep 1s
+	local id
+	id=$(awk -F '=' '/\[c2c\]/{a=1}a==1&&$1~/id/{print $2;exit}' "$CONF_PATH"|awk '$1=$1')
+	[ -n "$id" ] || id='0'
+	uci set bilihp.conf.id="$id"
+	uci commit bilihp
+}
+
+stop_service() {
+	kill -9 $(busybox ps -w | grep $SCRIPT_PATH | grep -v grep | awk '{print $1}') >/dev/null 2>&1
+	kill -9 $(busybox ps -w | grep $APP_PATH | grep -v grep | awk '{print $1}') >/dev/null 2>&1
+	[ -d $DIR_PATH ] && rm -rf $DIR_PATH
+}
+
+restart_service() {
+	stop_service
+	start_service
+}
+
+download_bilihp() {
+	local url1='http://pandorabox.tuuz.cc:8000/app/c2c_router_linux'
+	local url2='https://pandorabox.tuuz.cc:444/app/c2c_router_linux'
+	curl $url1 -s -f -o $1 >/dev/null 2>&1 || curl $url2 -s -f -o $1 >/dev/null 2>&1 || \
+	wget $url1 -q -O $1 >/dev/null 2>&1 || wget $url2 -q -O $1 >/dev/null 2>&1
+}
+
+generate_limit_log() {
+	cat > $SCRIPT_PATH <<EOF
+#!/bin/sh
+
+function limit_size_log(){  
+	local logfile=\$1  
+	local maxsize=\$2 
+
+	if [ ! -f "\$logfile" ]; then
+		touch \$logfile
+	fi
+
+	filesize=\`ls -l \$logfile | awk '{ print \$5 }'\`
+
+	if [ \$filesize -gt \$maxsize ]; then
+		cat /dev/null > \$logfile
+	fi
+
+}
+
+# running
+while true
+do
+	limit_size_log $LOG_PATH $1
+	sleep 60
+done
+EOF
+}

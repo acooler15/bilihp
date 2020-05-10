@@ -1,0 +1,9 @@
+
+config bilihp 'conf'
+	option enable 0
+	option name 'openwrt'
+	option password '123456'
+	option log 0
+	option logsize 64
+	option id '0'
+
