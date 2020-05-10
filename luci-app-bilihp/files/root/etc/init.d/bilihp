@@ -87,7 +87,7 @@ generate_limit_log() {
 	cat > $SCRIPT_PATH <<EOF
 #!/bin/sh
 
-function limit_size_log(){  
+limit_size_log() {  
 	local logfile=\$1  
 	local maxsize=\$2 
 
