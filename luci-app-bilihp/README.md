@@ -10,7 +10,9 @@ c2c_router_linux下载地址为：
 
 点击"Save&Apply"/"保存&重启"按钮会触发脚本自动重启，插件重启时会重新下载c2c_router_linux。
 
-插件没有定时更新、定时重启功能，需要的可以在系统计划任务中自己设置，使用命令`/etc/init.d/bilihp restart`即可。
+插件增加存活监控脚本，每分钟检查一次。增加自动检查更新脚本，每隔15分钟检查一次。若需要修改检查时间间隔，需要手动在 /usr/ share/bilihp 中修改bilihp_monitor.sh和bilihp_update.sh
+
+插件没有定时重启功能，需要的可以在系统计划任务中自己设置，使用命令`/etc/init.d/bilihp restart`即可。
 如：
 ```
 0 2 * * * /etc/init.d/bilihp restart
