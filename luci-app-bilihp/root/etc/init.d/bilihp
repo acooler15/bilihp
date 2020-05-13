@@ -6,15 +6,14 @@ STOP=21
 
 APP_NAME='bilihp_router'
 CONF_NAME="conf.ini"
-SCRIPT_NAME="bilihp_log_limit"
-LOG_NAME="bilihp.log"
 
 DIR_PATH='/tmp/bilihp/'
 APP_PATH="$DIR_PATH""$APP_NAME"
 CONF_PATH="$DIR_PATH""$CONF_NAME"
-SCRIPT_PATH="$DIR_PATH""$SCRIPT_NAME"
-LOG_PATH="$DIR_PATH""$LOG_NAME"
 
+LOG_SCRIPT="/usr/share/bilihp/bilihp_log_limit.sh"
+UPDATE_SCRIPT="/usr/share/bilihp/bilihp_update.sh"
+MONTIOR_SCRIPT="/usr/share/bilihp/bilihp_monitor.sh"
 
 start_service() {
 	config_load 'bilihp'
@@ -27,11 +26,14 @@ start_service() {
 	local password
 	config_get name conf name
 	config_get password conf password
-
+	local source_app_name="c2c_router_linux"
+	local base_url="http://pandorabox.tuuz.cc:8000/app/"
+	local base_url2="https://pandorabox.tuuz.cc:444/app/"
 	[ -d $DIR_PATH ] || mkdir $DIR_PATH
 
 	touch $APP_PATH
-	download_bilihp $APP_PATH
+	download_bilihp
+
 	local filesize
 	filesize=`ls -l $APP_PATH | awk '{ print $5 }'`
 	[ $filesize -le 0 ] && logger -s -t bilihp "donwload bilihp error!"
@@ -39,21 +41,22 @@ start_service() {
 	chmod +x $APP_PATH
 
 	echo -e "[c2c]\nname = $name\npassword = $password" > "$CONF_PATH"
-
+	# run biluhp_update
+	"$UPDATE_SCRIPT" "$DIR_PATH" "$source_app_name" "$base_url" "$base_url2" > /dev/null 2>&1 &
 	local log=0
 	config_get_bool log conf log
 
+	local log_path="$DIR_PATH""bilihp.log"
 	local logsize
 	config_get logsize conf logsize
 	if [ "$log" == 1 ]; then
 		[ "$logsize" -gt 0 ] || logsize=64
 		uci set bilihp.conf.logsize="$logsize"
-		generate_limit_log $(($logsize*1024))
-		chmod +x "$SCRIPT_PATH"
-		cd "$DIR_PATH" && "$APP_PATH" >> "$LOG_PATH" 2>&1 &
-		"$SCRIPT_PATH" > /dev/null 2>&1 &
+		cd "$DIR_PATH" && "$APP_PATH" >> "$log_path" 2>&1 &
+		# run bilihp_log_limit
+		"$LOG_SCRIPT" "$log_path" "$logsize" > /dev/null 2>&1 &
 	else
-		echo "Logging is not enabled!" > "$LOG_PATH"
+		echo "Logging is not enabled!" > "$log_path"
 		cd "$DIR_PATH" && "$APP_PATH" > /dev/null 2>&1 &
 	fi
 
@@ -63,10 +66,14 @@ start_service() {
 	[ -n "$id" ] || id='0'
 	uci set bilihp.conf.id="$id"
 	uci commit bilihp
+	# run bilihp_monitor
+	"$MONTIOR_SCRIPT" "$APP_PATH" > /dev/null 2>&1 &
 }
 
 stop_service() {
-	kill -9 $(busybox ps -w | grep $SCRIPT_PATH | grep -v grep | awk '{print $1}') >/dev/null 2>&1
+	kill -9 $(busybox ps -w | grep $MONTIOR_SCRIPT | grep -v grep | awk '{print $1}') >/dev/null 2>&1
+	kill -9 $(busybox ps -w | grep $UPDATE_SCRIPT | grep -v grep | awk '{print $1}') >/dev/null 2>&1
+	kill -9 $(busybox ps -w | grep $LOG_SCRIPT | grep -v grep | awk '{print $1}') >/dev/null 2>&1
 	kill -9 $(busybox ps -w | grep $APP_PATH | grep -v grep | awk '{print $1}') >/dev/null 2>&1
 	[ -d $DIR_PATH ] && rm -rf $DIR_PATH
 }
@@ -77,37 +84,9 @@ restart_service() {
 }
 
 download_bilihp() {
-	local url1='http://pandorabox.tuuz.cc:8000/app/c2c_router_linux'
-	local url2='https://pandorabox.tuuz.cc:444/app/c2c_router_linux'
-	curl $url1 -s -f -o $1 >/dev/null 2>&1 || curl $url2 -s -f -o $1 >/dev/null 2>&1 || \
-	wget $url1 -q -O $1 >/dev/null 2>&1 || wget $url2 -q -O $1 >/dev/null 2>&1
+	local url1="$base_url""$source_app_name"
+	local url2="$base_url2""$source_app_name"
+	curl $url1 -s -f -o $APP_PATH >/dev/null 2>&1 || curl $url2 -s -f -o $APP_PATH >/dev/null 2>&1 || \
+	wget $url1 -q -O $APP_PATH >/dev/null 2>&1 || wget $url2 -q -O $APP_PATH >/dev/null 2>&1
 }
 
-generate_limit_log() {
-	cat > $SCRIPT_PATH <<EOF
-#!/bin/sh
-
-limit_size_log() {  
-	local logfile=\$1  
-	local maxsize=\$2 
-
-	if [ ! -f "\$logfile" ]; then
-		touch \$logfile
-	fi
-
-	filesize=\`ls -l \$logfile | awk '{ print \$5 }'\`
-
-	if [ \$filesize -gt \$maxsize ]; then
-		cat /dev/null > \$logfile
-	fi
-
-}
-
-# running
-while true
-do
-	limit_size_log $LOG_PATH $1
-	sleep 60
-done
-EOF
-}
