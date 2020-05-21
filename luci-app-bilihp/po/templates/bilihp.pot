@@ -1,62 +1,66 @@
 msgid ""
 msgstr "Content-Type: text/plain; charset=UTF-8"
 
-#: bilihp/luci-app-bilihp/luasrc/model/cbi/bilihp/conf.lua:13
+#: luci-app-bilihp/luasrc/model/cbi/bilihp/conf.lua:13
 msgid "BiliHP c2c"
 msgstr ""
 
-#: bilihp/luci-app-bilihp/luasrc/view/bilihp/bilihp_status.htm:20
+#: luci-app-bilihp/luasrc/view/bilihp/bilihp_status.htm:28
 msgid "Collecting data..."
 msgstr ""
 
-#: bilihp/luci-app-bilihp/luasrc/controller/bilihp.lua:5
+#: luci-app-bilihp/luasrc/controller/bilihp.lua:5
 msgid "Configure"
 msgstr ""
 
-#: bilihp/luci-app-bilihp/luasrc/model/cbi/bilihp/conf.lua:13
+#: luci-app-bilihp/luasrc/model/cbi/bilihp/conf.lua:13
 msgid "Configure BiliHP c2c."
 msgstr ""
 
-#: bilihp/luci-app-bilihp/luasrc/model/cbi/bilihp/conf.lua:21
+#: luci-app-bilihp/luasrc/model/cbi/bilihp/conf.lua:21
 msgid "Enable"
 msgstr ""
 
-#: bilihp/luci-app-bilihp/luasrc/model/cbi/bilihp/conf.lua:30
+#: luci-app-bilihp/luasrc/model/cbi/bilihp/conf.lua:30
 msgid "Enable logging"
 msgstr ""
 
-#: bilihp/luci-app-bilihp/luasrc/model/cbi/bilihp/conf.lua:23
+#: luci-app-bilihp/luasrc/model/cbi/bilihp/conf.lua:23
 msgid "ID"
 msgstr ""
 
-#: bilihp/luci-app-bilihp/luasrc/controller/bilihp.lua:6
+#: luci-app-bilihp/luasrc/controller/bilihp.lua:6
 msgid "Log"
 msgstr ""
 
-#: bilihp/luci-app-bilihp/luasrc/model/cbi/bilihp/conf.lua:32
+#: luci-app-bilihp/luasrc/model/cbi/bilihp/conf.lua:32
 msgid "Log Size"
 msgstr ""
 
-#: bilihp/luci-app-bilihp/luasrc/view/bilihp/bilihp_status.htm:10
+#: luci-app-bilihp/luasrc/view/bilihp/bilihp_status.htm:18
 msgid "NOT RUNNING"
 msgstr ""
 
-#: bilihp/luci-app-bilihp/luasrc/model/cbi/bilihp/conf.lua:25
+#: luci-app-bilihp/luasrc/model/cbi/bilihp/conf.lua:25
 msgid "Name"
 msgstr ""
 
-#: bilihp/luci-app-bilihp/luasrc/model/cbi/bilihp/conf.lua:27
+#: luci-app-bilihp/luasrc/model/cbi/bilihp/conf.lua:27
 msgid "Password"
 msgstr ""
 
-#: bilihp/luci-app-bilihp/luasrc/view/bilihp/bilihp_status.htm:7
+#: luci-app-bilihp/luasrc/view/bilihp/bilihp_status.htm:7
 msgid "RUNNING"
 msgstr ""
 
-#: bilihp/luci-app-bilihp/luasrc/model/cbi/bilihp/conf.lua:32
+#: luci-app-bilihp/luasrc/view/bilihp/bilihp_status.htm:11
+msgid "Release time"
+msgstr ""
+
+#: luci-app-bilihp/luasrc/model/cbi/bilihp/conf.lua:32
 msgid "Specify the size in Kib,default value is 64,Maximum is 10240"
 msgstr ""
 
-#: bilihp/luci-app-bilihp/luasrc/controller/bilihp.lua:4
+#: luci-app-bilihp/luasrc/controller/bilihp.lua:4
 msgid "bilihp c2c"
 msgstr ""
