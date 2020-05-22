@@ -21,7 +21,7 @@ msgstr "BiliHP c2c 配置"
 msgid "Enable"
 msgstr "启用"
 
-#: luci-app-bilihp/luasrc/model/cbi/bilihp/conf.lua:30
+#: luci-app-bilihp/luasrc/model/cbi/bilihp/conf.lua:37
 msgid "Enable logging"
 msgstr "启用日志记录"
 
@@ -33,7 +33,7 @@ msgstr "ID"
 msgid "Log"
 msgstr "日志"
 
-#: luci-app-bilihp/luasrc/model/cbi/bilihp/conf.lua:32
+#: luci-app-bilihp/luasrc/model/cbi/bilihp/conf.lua:39
 msgid "Log Size"
 msgstr "日志缓存区大小"
 
@@ -49,6 +49,10 @@ msgstr "服务器名"
 msgid "Password"
 msgstr "密码"
 
+#: luci-app-bilihp/luasrc/model/cbi/bilihp/conf.lua:30
+msgid "Platforms"
+msgstr "平台"
+
 #: luci-app-bilihp/luasrc/view/bilihp/bilihp_status.htm:7
 msgid "RUNNING"
 msgstr "运行中"
@@ -57,9 +61,13 @@ msgstr "运行中"
 msgid "Release time"
 msgstr "版本发布时间"
 
-#: luci-app-bilihp/luasrc/model/cbi/bilihp/conf.lua:32
+#: luci-app-bilihp/luasrc/model/cbi/bilihp/conf.lua:39
 msgid "Specify the size in Kib,default value is 64,Maximum is 10240"
 msgstr "单位为Kib，默认值为64，最大值为10240"
+
+#: luci-app-bilihp/luasrc/model/cbi/bilihp/conf.lua:31
+msgid "auto"
+msgstr "自动"
 
 #: luci-app-bilihp/luasrc/controller/bilihp.lua:4
 msgid "bilihp c2c"

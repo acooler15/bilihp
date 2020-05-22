@@ -27,6 +27,13 @@ name = s:option(Value, "name", translate("Name"))
 pass = s:option(Value, "password", translate("Password"))
 pass.password = true
 
+platforms = s:option(Value, "platforms", translate("Platforms"))
+platforms:value("auto", translate("auto"))
+platforms:value("c2c_linux", "c2c_linux")
+platforms:value("c2c_32_linux", "c2c_32_linux")
+platforms:value("c2c_router_linux", "c2c_router_linux")
+platforms.default = "auto"
+
 log = s:option(Flag, "log", translate("Enable logging"))
 
 logsize = s:option(Value, "logsize", translate("Log Size"),translate("Specify the size in Kib,default value is 64,Maximum is 10240"))

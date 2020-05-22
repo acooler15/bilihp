@@ -24,9 +24,14 @@ start_service() {
 	
 	local name
 	local password
+	local platforms
 	config_get name conf name
 	config_get password conf password
-	local source_app_name="c2c_router_linux"
+	config_get platforms conf platforms
+
+	local source_app_name="$platforms"
+	[[ "$source_app_name" == 'auto' || -z "$source_app_name" ]] && select_platforms
+
 	local base_url="http://pandorabox.tuuz.cc:8000/app/"
 	local base_url2="https://pandorabox.tuuz.cc:444/app/"
 	[ -d $DIR_PATH ] || mkdir $DIR_PATH
@@ -89,5 +94,17 @@ download_bilihp() {
 	local url2="$base_url2""$source_app_name"
 	curl $url1 -s -f -o $APP_PATH >/dev/null 2>&1 || curl $url2 -s -f -o $APP_PATH >/dev/null 2>&1 || \
 	wget $url1 -q -O $APP_PATH >/dev/null 2>&1 || wget $url2 -q -O $APP_PATH >/dev/null 2>&1
+}
+
+select_platforms() {
+	local cpu_platforms=$(uname -m)
+	if [ -z "${cpu_platforms##*x86_64*}" ]; then
+		source_app_name="c2c_linux"
+	elif [ -z "${cpu_platforms##*x86*}" ]; then
+		source_app_name="c2c_32_linux"
+	else
+		source_app_name="c2c_router_linux"
+	fi
+	uci set bilihp.conf.platforms="$source_app_name"
 }
 

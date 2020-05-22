@@ -21,7 +21,7 @@ msgstr ""
 msgid "Enable"
 msgstr ""
 
-#: luci-app-bilihp/luasrc/model/cbi/bilihp/conf.lua:30
+#: luci-app-bilihp/luasrc/model/cbi/bilihp/conf.lua:37
 msgid "Enable logging"
 msgstr ""
 
@@ -33,7 +33,7 @@ msgstr ""
 msgid "Log"
 msgstr ""
 
-#: luci-app-bilihp/luasrc/model/cbi/bilihp/conf.lua:32
+#: luci-app-bilihp/luasrc/model/cbi/bilihp/conf.lua:39
 msgid "Log Size"
 msgstr ""
 
@@ -49,6 +49,10 @@ msgstr ""
 msgid "Password"
 msgstr ""
 
+#: luci-app-bilihp/luasrc/model/cbi/bilihp/conf.lua:30
+msgid "Platforms"
+msgstr ""
+
 #: luci-app-bilihp/luasrc/view/bilihp/bilihp_status.htm:7
 msgid "RUNNING"
 msgstr ""
@@ -57,8 +61,12 @@ msgstr ""
 msgid "Release time"
 msgstr ""
 
-#: luci-app-bilihp/luasrc/model/cbi/bilihp/conf.lua:32
+#: luci-app-bilihp/luasrc/model/cbi/bilihp/conf.lua:39
 msgid "Specify the size in Kib,default value is 64,Maximum is 10240"
+msgstr ""
+
+#: luci-app-bilihp/luasrc/model/cbi/bilihp/conf.lua:31
+msgid "auto"
 msgstr ""
 
 #: luci-app-bilihp/luasrc/controller/bilihp.lua:4
