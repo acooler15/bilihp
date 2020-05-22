@@ -84,6 +84,7 @@ restart_service() {
 }
 
 download_bilihp() {
+	logger -t bilihp "donwload $sousource_app_name"
 	local url1="$base_url""$source_app_name"
 	local url2="$base_url2""$source_app_name"
 	curl $url1 -s -f -o $APP_PATH >/dev/null 2>&1 || curl $url2 -s -f -o $APP_PATH >/dev/null 2>&1 || \

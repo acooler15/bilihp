@@ -23,6 +23,7 @@ update() {
 				local stimestamp=$(cat $bilihp_timestamp_path)
 				[ -z "$stimestamp" ] && stimestamp=0
 				if [ $timestamp -gt $stimestamp ]; then
+					logger -t bilihp "A new version has been found and will be updated."
 					/etc/init.d/bilihp restart
 				fi
 			else
