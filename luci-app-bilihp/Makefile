@@ -2,7 +2,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=luci-app-bilihp
 PKG_VERSION:=1.0
-PKG_RELEASE:=5
+PKG_RELEASE:=6
 
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 
@@ -46,7 +46,7 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_DATA) ./luasrc/view/bilihp/* $(1)/usr/lib/lua/luci/view/bilihp/
 
 	$(INSTALL_DIR) $(1)/usr/share/bilihp
-	$(INSTALL_DATA) ./root/usr/share/bilihp/* $(1)/usr/share/bilihp/
+	$(INSTALL_BIN) ./root/usr/share/bilihp/* $(1)/usr/share/bilihp/
 
 	$(INSTALL_DIR) $(1)/usr/lib/lua/luci/i18n
 	po2lmo ./po/zh-cn/bilihp.po $(1)/usr/lib/lua/luci/i18n/bilihp.zh-cn.lmo
@@ -54,10 +54,19 @@ define Package/$(PKG_NAME)/install
 endef
 
 define Package/$(PKG_NAME)/preinst
+	#!/bin/sh
+	if [ -f /etc/config/bilihp ]; then
+		cp /etc/config/bilihp /tmp/bilihp.conf.tmp
+	fi
 endef
 
 define Package/$(PKG_NAME)/postinst
+	#!/bin/sh
 	chmod +x /usr/share/bilihp/*.sh
+	if [ -f /tmp/bilihp.conf.tmp ]; then
+		cat /tmp/bilihp.conf.tmp > /etc/config/bilihp
+		rm -f /tmp/bilihp.conf.tmp
+	fi
 endef
 
 define Package/$(PKG_NAME)/prerm
