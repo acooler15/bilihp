@@ -6,10 +6,12 @@ STOP=21
 
 APP_NAME='bilihp_router'
 CONF_NAME="conf.ini"
+CONF_MD5="conf.md5"
 
 DIR_PATH='/tmp/bilihp/'
 APP_PATH="$DIR_PATH""$APP_NAME"
 CONF_PATH="$DIR_PATH""$CONF_NAME"
+CONF_MD5_PATH="$DIR_PATH""$CONF_MD5"
 
 LOG_SCRIPT="/usr/share/bilihp/bilihp_log_limit.sh"
 UPDATE_SCRIPT="/usr/share/bilihp/bilihp_update.sh"
@@ -64,15 +66,9 @@ start_service() {
 		echo "Logging is not enabled!" > "$log_path"
 		cd "$DIR_PATH" && "$APP_PATH" > /dev/null 2>&1 &
 	fi
-
-	sleep 1s
-	local id
-	id=$(awk -F '=' '/\[c2c\]/{a=1}a==1&&$1~/id/{print $2;exit}' "$CONF_PATH"|awk '$1=$1')
-	[ -n "$id" ] || id='0'
-	uci set bilihp.conf.id="$id"
 	uci commit bilihp
 	# run bilihp_monitor
-	"$MONTIOR_SCRIPT" "$APP_PATH" > /dev/null 2>&1 &
+	"$MONTIOR_SCRIPT" "$APP_PATH" "$CONF_PATH" "$CONF_MD5_PATH" > /dev/null 2>&1 &
 }
 
 stop_service() {
