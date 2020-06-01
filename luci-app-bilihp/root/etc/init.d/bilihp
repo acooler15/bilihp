@@ -39,15 +39,16 @@ start_service() {
 	[ -d $DIR_PATH ] || mkdir $DIR_PATH
 
 	touch $APP_PATH
+	echo -e "[c2c]\nname = $name\npassword = $password" > "$CONF_PATH"
 	download_bilihp
 
 	local filesize
 	filesize=`ls -l $APP_PATH | awk '{ print $5 }'`
 	[ $filesize -le 0 ] && logger -s -t bilihp "donwload bilihp error!"
+	[ $filesize -le 0 ] && "$MONTIOR_SCRIPT" "$APP_PATH" "$CONF_PATH" "$CONF_MD5_PATH" > /dev/null 2>&1 &
 	[ $filesize -le 0 ] && return 0
 	chmod +x $APP_PATH
 
-	echo -e "[c2c]\nname = $name\npassword = $password" > "$CONF_PATH"
 	# run biluhp_update
 	"$UPDATE_SCRIPT" "$DIR_PATH" "$source_app_name" "$base_url" "$base_url2" > /dev/null 2>&1 &
 	local log=0
