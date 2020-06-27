@@ -99,6 +99,10 @@ select_platforms() {
 		source_app_name="c2c_linux"
 	elif [ -z "${cpu_platforms##*x86*}" ]; then
 		source_app_name="c2c_32_linux"
+	elif [ -z "${cpu_platforms##*arm*}" ]; then
+		source_app_name="c2c_arm_linux"
+	elif [ -z "${cpu_platforms##*aarch*}" ]; then
+		source_app_name="c2c_arm_linux"
 	else
 		source_app_name="c2c_router_linux"
 	fi

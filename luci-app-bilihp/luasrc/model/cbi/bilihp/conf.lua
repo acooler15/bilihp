@@ -31,6 +31,7 @@ platforms = s:option(Value, "platforms", translate("Platforms"))
 platforms:value("auto", translate("auto"))
 platforms:value("c2c_linux", "c2c_linux")
 platforms:value("c2c_32_linux", "c2c_32_linux")
+platforms:value("c2c_arm_linux", "c2c_arm_linux")
 platforms:value("c2c_router_linux", "c2c_router_linux")
 platforms.default = "auto"
 
