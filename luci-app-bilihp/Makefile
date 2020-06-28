@@ -1,8 +1,9 @@
+# Copyright By BiliHp (https://app.bilihp.com:444)
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=luci-app-bilihp
 PKG_VERSION:=1.1
-PKG_RELEASE:=3
+PKG_RELEASE:=4
 
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 
@@ -12,12 +13,12 @@ define Package/$(PKG_NAME)
 	SECTION:=luci
 	CATEGORY:=LuCI
 	SUBMENU:=3. Applications
-	TITLE:=BiliHP for LuCI
+	TITLE:=Bilibili Helper for LuCI
 	PKGARCH:= all
 endef
 
 define Package/$(PKG_NAME)/description
-	This package contains LuCI configuration pages for BiliHP.
+	This package contains LuCI configuration pages for Bilibili Helper.
 endef
 
 define Build/Prepare

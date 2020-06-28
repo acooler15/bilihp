@@ -1,16 +1,8 @@
 --[[
 LuCI - Lua Configuration Interface
-
-Copyright 2010 Jo-Philipp Wich <xm@subsignal.org>
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-	http://www.apache.org/licenses/LICENSE-2.0
 ]]--
 require("luci.sys")
-m = Map("bilihp", translate("BiliHP c2c"), translate("Configure BiliHP c2c."))
+m = Map("bilihp", translate("Bilibili Helper"), translate("website: https://app.bilihp.com:444/"))
 
 m:section(SimpleSection).template  = "bilihp/bilihp_status"
 

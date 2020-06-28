@@ -1,7 +1,7 @@
 module("luci.controller.bilihp", package.seeall)
 
 function index()
-	entry({"admin", "services", "bilihp"}, alias("admin", "services", "bilihp", "conf"), _("bilihp c2c"), 100).dependent = true
+	entry({"admin", "services", "bilihp"}, alias("admin", "services", "bilihp", "conf"), _("Bilibili Helper"), 100).dependent = true
 	entry({"admin", "services", "bilihp", "conf"}, cbi("bilihp/conf"),_("Configure"), 10).leaf = true
 	entry({"admin", "services", "bilihp", "log"},form("bilihp/log"),_("Log"), 30)
 	entry({"admin", "services", "bilihp", "status"},call("act_status")).leaf=true
