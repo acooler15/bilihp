@@ -1,0 +1,9 @@
+#!/bin/sh
+[ "$(uci -q get bilihp.conf.base_urls)" == "" ] && uci -q batch << EOF
+set bilihp.conf.base_urls='https://pandorabox.tuuz.cc:444/app/'
+add_list bilihp.conf.base_urls='https://op.lingyan8.com/app/'
+commit bilihp
+EOF
+
+rm -rf /tmp/luci-modulecache /tmp/luci-indexcache
+exit 0

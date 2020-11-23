@@ -1,28 +1,35 @@
 <script type="text/javascript">//<![CDATA[
-XHR.poll(3, '<%=url([[admin]], [[services]], [[bilihp]], [[status]])%>', null,
-	function(x, data) {
-		var tb = document.getElementById('bilihp_status');
-		if (data && tb) {
-			if (data.running) {
-				var links = '<em><b><font color=green>BiliHP <%:RUNNING%>';
-				if (data.timestamp) {
-					var vdates = new Date(data.timestamp * 1000).toString().split(' ');
-					var vdate = vdates[2] + '-' + vdates[1] + '-' + vdates[3] + ' ' + vdates[4];
-					links += ',<%:Release time%>:';
-					links += vdate;
-					
+	XHR.poll(3, '<%=url([[admin]], [[services]], [[bilihp]], [[status]])%>', null,
+		function (x, data) {
+			var tb = document.getElementById('bilihp_status');
+			if (data && tb) {
+				if (data.status == 1) {
+					var links = '<em><b><font color=green>BiliHP <%:RUNNING%>';
+					if (data.timestamp) {
+						var vdates = new Date(data.timestamp * 1000).toString().split(' ');
+						var vdate = vdates[2] + '-' + vdates[1] + '-' + vdates[3] + ' ' + vdates[4];
+						links += ',<%:Release time%>:';
+						links += vdate;
+
+					}
+					links += '</font></b></em>';
+					tb.innerHTML = links;
+				} else if (data.status == -1) {
+					tb.innerHTML = '<em><b><font color=red>BiliHP <%:C2C Download Error%></font></b></em>';
+				} else {
+					tb.innerHTML = '<em><b><font color=red>BiliHP <%:NOT RUNNING%></font></b></em>';
 				}
-				links += '</font></b></em>';
-				tb.innerHTML = links;
-			} else {
-				tb.innerHTML = '<em><b><font color=red>BiliHP <%:NOT RUNNING%></font></b></em>';
 			}
 		}
-	}
-);
+	);
 //]]>
 </script>
-<style>.mar-10 {margin-left: 50px; margin-right: 10px;}</style>
+<style>
+	.mar-10 {
+		margin-left: 50px;
+		margin-right: 10px;
+	}
+</style>
 <fieldset class="cbi-section">
 	<p id="bilihp_status">
 		<em><%:Collecting data...%></em>

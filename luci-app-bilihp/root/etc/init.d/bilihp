@@ -23,34 +23,56 @@ start_service() {
 
 	config_get_bool enable conf enable
 	[ "$enable" != 1 ] && return 0
-	
+
 	local name
 	local password
 	local platforms
+	local base_urls
+	local custom
 	config_get name conf name
 	config_get password conf password
 	config_get platforms conf platforms
+	config_get base_urls conf base_urls
+	config_get custom conf custom
 
-	local source_app_name="$platforms"
-	[[ "$source_app_name" == 'auto' || -z "$source_app_name" ]] && select_platforms
-
-	local base_url="http://pandorabox.tuuz.cc:8000/app/"
-	local base_url2="https://pandorabox.tuuz.cc:444/app/"
 	[ -d $DIR_PATH ] || mkdir $DIR_PATH
 
 	touch $APP_PATH
-	echo -e "[c2c]\nname = $name\npassword = $password" > "$CONF_PATH"
-	download_bilihp
+
+	custom=$(eval echo ${custom})
+	if [ -n "$custom" ]; then
+		wget $custom --no-check-certificate --connect-timeout=5 -t 3 -q -O $APP_PATH
+	else
+		[[ "$platforms" == 'auto' || -z "$platforms" ]] && select_platforms
+
+		base_urls=$(eval echo ${base_urls})
+		if [ -z "$base_urls" ]; then
+			base_urls='https://pandorabox.tuuz.cc:444/app/ https://op.lingyan8.com/app/'
+			uci set bilihp.conf.base_urls='https://pandorabox.tuuz.cc:444/app/'
+			uci add_list bilihp.conf.base_urls='https://op.lingyan8.com/app/'
+		fi
+		# download c2c
+		local down_shell=''
+		local base_url
+		for url in $base_urls; do
+			echo $url | grep -qE '.*/$' || url="${url}/"
+			down_shell="${down_shell} || { wget ${url}${platforms} --no-check-certificate --connect-timeout=5 -t 1 -q -O ${APP_PATH} && base_url=${url}; }"
+		done
+		eval ${down_shell:3}
+	fi
+
+	echo -e "[c2c]\nname = $name\npassword = $password" >"$CONF_PATH"
 
 	local filesize
-	filesize=`ls -l $APP_PATH | awk '{ print $5 }'`
-	[ $filesize -le 0 ] && logger -s -t bilihp "donwload bilihp error!"
-	[ $filesize -le 0 ] && "$MONTIOR_SCRIPT" "$APP_PATH" "$CONF_PATH" "$CONF_MD5_PATH" > /dev/null 2>&1 &
-	[ $filesize -le 0 ] && return 0
+	filesize=$(ls -l $APP_PATH | awk '{ print $5 }')
+	if [ $filesize -le 0 ]; then
+		logger -s -t bilihp "donwload bilihp error!"
+		touch "${DIR_PATH}downerr"
+		"$MONTIOR_SCRIPT" "$APP_PATH" "$CONF_PATH" "$CONF_MD5_PATH" >/dev/null 2>&1 &
+		return 0
+	fi
 	chmod +x $APP_PATH
 
-	# run biluhp_update
-	"$UPDATE_SCRIPT" "$DIR_PATH" "$source_app_name" "$base_url" "$base_url2" > /dev/null 2>&1 &
 	local log=0
 	config_get_bool log conf log
 
@@ -60,16 +82,18 @@ start_service() {
 	if [ "$log" == 1 ]; then
 		[ "$logsize" -gt 0 ] || logsize=64
 		uci set bilihp.conf.logsize="$logsize"
-		cd "$DIR_PATH" && "$APP_PATH" >> "$log_path" 2>&1 &
+		cd "$DIR_PATH" && "$APP_PATH" >>"$log_path" 2>&1 &
 		# run bilihp_log_limit
-		"$LOG_SCRIPT" "$log_path" "$logsize" > /dev/null 2>&1 &
+		"$LOG_SCRIPT" "$log_path" "$logsize" >/dev/null 2>&1 &
 	else
-		echo "Logging is not enabled!" > "$log_path"
-		cd "$DIR_PATH" && "$APP_PATH" > /dev/null 2>&1 &
+		echo "Logging is not enabled!" >"$log_path"
+		cd "$DIR_PATH" && "$APP_PATH" >/dev/null 2>&1 &
 	fi
 	uci commit bilihp
 	# run bilihp_monitor
-	"$MONTIOR_SCRIPT" "$APP_PATH" "$CONF_PATH" "$CONF_MD5_PATH" > /dev/null 2>&1 &
+	"$MONTIOR_SCRIPT" "$APP_PATH" "$CONF_PATH" "$CONF_MD5_PATH" >/dev/null 2>&1 &
+	# run biluhp_update
+	[ -n "$custom" ] || "$UPDATE_SCRIPT" "$DIR_PATH" "$platforms" "$base_url" >/dev/null 2>&1 &
 }
 
 stop_service() {
@@ -85,27 +109,18 @@ restart_service() {
 	start_service
 }
 
-download_bilihp() {
-	logger -t bilihp "donwload $sousource_app_name"
-	local url1="$base_url""$source_app_name"
-	local url2="$base_url2""$source_app_name"
-	curl $url1 -s -f -o $APP_PATH >/dev/null 2>&1 || curl $url2 -s -f -o $APP_PATH >/dev/null 2>&1 || \
-	wget $url1 -q -O $APP_PATH >/dev/null 2>&1 || wget $url2 -q -O $APP_PATH >/dev/null 2>&1
-}
-
 select_platforms() {
 	local cpu_platforms=$(uname -m)
 	if [ -z "${cpu_platforms##*x86_64*}" ]; then
-		source_app_name="c2c_linux"
+		platforms="c2c_linux"
 	elif [ -z "${cpu_platforms##*x86*}" ]; then
-		source_app_name="c2c_32_linux"
+		platforms="c2c_32_linux"
 	elif [ -z "${cpu_platforms##*arm*}" ]; then
-		source_app_name="c2c_arm_linux"
+		platforms="c2c_arm_linux"
 	elif [ -z "${cpu_platforms##*aarch*}" ]; then
-		source_app_name="c2c_arm_linux"
+		platforms="c2c_arm_linux"
 	else
-		source_app_name="c2c_router_linux"
+		platforms="c2c_router_linux"
 	fi
-	uci set bilihp.conf.platforms="$source_app_name"
+	uci set bilihp.conf.platforms="$platforms"
 }
-

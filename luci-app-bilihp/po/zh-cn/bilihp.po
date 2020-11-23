@@ -1,72 +1,91 @@
 msgid ""
 msgstr "Content-Type: text/plain; charset=UTF-8\n"
 
-#: ../luci-app-bilihp/luasrc/controller/bilihp.lua:4
-#: ../luci-app-bilihp/luasrc/model/cbi/bilihp/conf.lua:5
+#: luci-app-bilihp/luasrc/model/cbi/bilihp/conf.lua:23
+msgid "A resource site for downloading C2C.Use the primary site(https://pandorabox.tuuz.cc:444/app/) by default"
+msgstr "C2C程序的下载站点。默认使用主站点(https://pandorabox.tuuz.cc:444/app/)"
+
+#: luci-app-bilihp/luasrc/controller/bilihp.lua:4
+#: luci-app-bilihp/luasrc/model/cbi/bilihp/conf.lua:5
 msgid "Bilibili Helper"
 msgstr "哔哩哔哩助手"
 
-#: ../luci-app-bilihp/luasrc/view/bilihp/bilihp_status.htm:28
+#: luci-app-bilihp/luasrc/view/bilihp/bilihp_status.htm:18
+msgid "C2C Download Error"
+msgstr "C2C下载失败"
+
+#: luci-app-bilihp/luasrc/view/bilihp/bilihp_status.htm:35
 msgid "Collecting data..."
 msgstr "正在收集信息..."
 
-#: ../luci-app-bilihp/luasrc/controller/bilihp.lua:5
+#: luci-app-bilihp/luasrc/controller/bilihp.lua:5
 msgid "Configure"
 msgstr "配置"
 
-#: ../luci-app-bilihp/luasrc/model/cbi/bilihp/conf.lua:13
+#: luci-app-bilihp/luasrc/model/cbi/bilihp/conf.lua:33
+msgid "Custom Download"
+msgstr "自定义下载"
+
+#: luci-app-bilihp/luasrc/model/cbi/bilihp/conf.lua:33
+msgid "Custom Program Download URL,support HTTP/HTTPS/FTP.NOTE:Program must be available.The Settings for 'Repository URL' and 'Platforms' will become invalid if this item is used.The value default is empty.Example: https://pandorabox.tuuz.cc:444/app/c2c_router_linux"
+msgstr "C2C自定义下载链接，支持HTTP/HTTPS/FTP。注意：程序必须可用。使用此项将导致‘资源库地址’和‘平台’选项的设置失效。选项默认值为空。示例：https://pandorabox.tuuz.cc:444/app/c2c_router_linux"
+
+#: luci-app-bilihp/luasrc/model/cbi/bilihp/conf.lua:13
 msgid "Enable"
 msgstr "启用"
 
-#: ../luci-app-bilihp/luasrc/model/cbi/bilihp/conf.lua:30
+#: luci-app-bilihp/luasrc/model/cbi/bilihp/conf.lua:36
 msgid "Enable logging"
 msgstr "启用日志记录"
 
-#: ../luci-app-bilihp/luasrc/model/cbi/bilihp/conf.lua:15
+#: luci-app-bilihp/luasrc/model/cbi/bilihp/conf.lua:15
 msgid "ID"
 msgstr "ID"
 
-#: ../luci-app-bilihp/luasrc/controller/bilihp.lua:6
+#: luci-app-bilihp/luasrc/controller/bilihp.lua:6
 msgid "Log"
 msgstr "日志"
 
-#: ../luci-app-bilihp/luasrc/model/cbi/bilihp/conf.lua:32
+#: luci-app-bilihp/luasrc/model/cbi/bilihp/conf.lua:38
 msgid "Log Size"
 msgstr "日志缓存区大小"
 
-#: ../luci-app-bilihp/luasrc/view/bilihp/bilihp_status.htm:18
+#: luci-app-bilihp/luasrc/view/bilihp/bilihp_status.htm:20
 msgid "NOT RUNNING"
 msgstr "未运行"
 
-#: ../luci-app-bilihp/luasrc/model/cbi/bilihp/conf.lua:17
+#: luci-app-bilihp/luasrc/model/cbi/bilihp/conf.lua:17
 msgid "Name"
 msgstr "服务器名"
 
-#: ../luci-app-bilihp/luasrc/model/cbi/bilihp/conf.lua:19
+#: luci-app-bilihp/luasrc/model/cbi/bilihp/conf.lua:19
 msgid "Password"
 msgstr "密码"
 
-#: ../luci-app-bilihp/luasrc/model/cbi/bilihp/conf.lua:22
+#: luci-app-bilihp/luasrc/model/cbi/bilihp/conf.lua:25
 msgid "Platforms"
 msgstr "平台"
 
-#: ../luci-app-bilihp/luasrc/view/bilihp/bilihp_status.htm:7
+#: luci-app-bilihp/luasrc/view/bilihp/bilihp_status.htm:7
 msgid "RUNNING"
 msgstr "运行中"
 
-#: ../luci-app-bilihp/luasrc/view/bilihp/bilihp_status.htm:11
+#: luci-app-bilihp/luasrc/view/bilihp/bilihp_status.htm:11
 msgid "Release time"
 msgstr "版本发布时间"
 
-#: ../luci-app-bilihp/luasrc/model/cbi/bilihp/conf.lua:32
+#: luci-app-bilihp/luasrc/model/cbi/bilihp/conf.lua:23
+msgid "Repository URL"
+msgstr "资源库地址"
+
+#: luci-app-bilihp/luasrc/model/cbi/bilihp/conf.lua:38
 msgid "Specify the size in Kib,default value is 64,Maximum is 10240"
 msgstr "单位为Kib，默认值为64，最大值为10240"
 
-#: ../luci-app-bilihp/luasrc/model/cbi/bilihp/conf.lua:23
+#: luci-app-bilihp/luasrc/model/cbi/bilihp/conf.lua:26
 msgid "auto"
 msgstr "自动"
 
-#: ../luci-app-bilihp/luasrc/model/cbi/bilihp/conf.lua:5
-msgid "website: https://app.bilihp.com:444/"
-msgstr "网站：https://app.bilihp.com:444/"
-
+#: luci-app-bilihp/luasrc/model/cbi/bilihp/conf.lua:5
+msgid "The plug-in USES C2CGO,provided by the BiliHP website(https://app.bilihp.com:444/)"
+msgstr "本插件使用的是由BiliHP网站(https://app.bilihp.com:444/)提供的C2CGO"

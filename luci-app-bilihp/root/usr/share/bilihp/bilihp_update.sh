@@ -3,18 +3,13 @@ update() {
 	local bilihp_base_path=$1
 	local app_name=$2
 	local base_url=$3
-	local base_url2=$4
 	local bilihp_index_path="$bilihp_base_path""index"
 	local bilihp_timestamp_path="$bilihp_base_path""timestamp"
-	while true
-	do
+	while true; do
 		touch $bilihp_index_path
-		curl $base_url -s -f -o $bilihp_index_path >/dev/null 2>&1 || \
-		curl $base_url2 -s -f -o $bilihp_index_path >/dev/null 2>&1 || \
-		wget $base_url -q -O $bilihp_index_path >/dev/null 2>&1 || \
-		wget $base_url2 -q -O $bilihp_index_path >/dev/null 2>&1
+		wget --no-check-certificate $base_url -q -O $bilihp_index_path
 		local index_filesize
-		index_filesize=`ls -l $bilihp_index_path | awk '{ print $5 }'`
+		index_filesize=$(ls -l $bilihp_index_path | awk '{ print $5 }')
 		if [ $index_filesize -gt 0 ]; then
 			local timestamp
 			# run function date2timestamp
@@ -28,7 +23,7 @@ update() {
 				fi
 			else
 				touch $bilihp_timestamp_path
-				echo "$timestamp" > "$bilihp_timestamp_path"
+				echo "$timestamp" >"$bilihp_timestamp_path"
 			fi
 		fi
 		rm -rf "$bilihp_index_path"
@@ -62,4 +57,4 @@ date2timestamp() {
 	timestamp=$(date -d "$tdate" +%s)
 
 }
-update "$1" "$2" "$3" "$4"
+update "$1" "$2" "$3"
