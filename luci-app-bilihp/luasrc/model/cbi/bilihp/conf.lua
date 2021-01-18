@@ -39,9 +39,9 @@ logsize = s:option(Value, "logsize", translate("Log Size"), translate("Specify t
 logsize:depends("log", "1")
 logsize.datatype = "and(uinteger,max(10240))"
 
-local apply = luci.http.formvalue("cbi.apply")
-if apply then
-	io.popen("/etc/init.d/bilihp restart")
-end
+-- local apply = luci.http.formvalue("cbi.apply")
+-- if apply then
+-- 	io.popen("/etc/init.d/bilihp restart")
+-- end
 
 return m
