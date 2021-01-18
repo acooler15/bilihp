@@ -18,6 +18,9 @@ UPDATE_SCRIPT="/usr/share/bilihp/bilihp_update.sh"
 MONTIOR_SCRIPT="/usr/share/bilihp/bilihp_monitor.sh"
 
 start_service() {
+	if ps -w | grep '/tmp/bilihp' | grep -v 'grep' >/dev/null; then
+		stop_service
+	fi
 	config_load 'bilihp'
 	local enable=0
 
@@ -58,7 +61,7 @@ start_service() {
 			echo $url | grep -qE '.*/$' || url="${url}/"
 			down_shell="${down_shell} || { wget ${url}${platforms} --no-check-certificate --connect-timeout=5 -t 1 -q -O ${APP_PATH} && base_url=${url}; }"
 		done
-		eval ${down_shell:3}
+		eval "${down_shell:3}"
 	fi
 
 	echo -e "[c2c]\nname = $name\npassword = $password" >"$CONF_PATH"
@@ -104,10 +107,10 @@ stop_service() {
 	[ -d $DIR_PATH ] && rm -rf $DIR_PATH
 }
 
-restart_service() {
-	stop_service
-	start_service
-}
+# restart_service() {
+# 	stop_service
+# 	start_service
+# }
 
 select_platforms() {
 	local cpu_platforms=$(uname -m)

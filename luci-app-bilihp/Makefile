@@ -4,7 +4,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=luci-app-bilihp
 PKG_VERSION:=1.2
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 LUCI_TITLE:=Bilibili Helper for LuCI
 LUCI_DESCRIPTION:=This package contains LuCI configuration pages for Bilibili Helper.

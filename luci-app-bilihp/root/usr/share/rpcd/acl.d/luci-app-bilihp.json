@@ -1,0 +1,11 @@
+{
+    "luci-app-bilihp": {
+        "description": "Luci for BiliHelper Script ",
+        "read": {
+            "uci": [ "bilihp" ]
+        },
+        "write": {
+            "uci": [ "bilihp" ]
+        }
+    }
+}
